@@ -3,6 +3,6 @@
     <corners android:topLeftRadius="52dp"
         android:topRightRadius="52dp"/>
     <gradient
-        android:startColor="@color/logoPink"
+        android:startColor="@color/crigsBlue"
         android:endColor="@color/white"/>
 </shape>
