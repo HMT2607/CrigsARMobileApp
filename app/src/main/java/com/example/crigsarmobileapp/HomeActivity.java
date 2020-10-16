@@ -13,15 +13,16 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
     ListView lvHome;
-    int rImag[] = {R.drawable.crigs_logo, R.drawable.hmt_logo, R.drawable.crigs_logo, R.drawable.hmt_logo, R.drawable.crigs_logo};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,33 +30,21 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         lvHome = findViewById(R.id.lvHome);
-        myAdapter adapter = new myAdapter(this, rImag);
+
+        ArrayList<ImageDisplayClass> ImgList = new ArrayList<>();
+
+        ImgList.add(new ImageDisplayClass(R.drawable.big_sale));
+        ImgList.add(new ImageDisplayClass(R.drawable.shoesdis));
+        ImgList.add(new ImageDisplayClass(R.drawable.girlshoes));
+        ImgList.add(new ImageDisplayClass(R.drawable.blacksh));
+        ImgList.add(new ImageDisplayClass(R.drawable.boatsh));
+        ImgList.add(new ImageDisplayClass(R.drawable.bootsh));
+        ImgList.add(new ImageDisplayClass(R.drawable.graysh));
+        ImgList.add(new ImageDisplayClass(R.drawable.thrity_off));
+
+        ImageDisplayAdapter adapter = new ImageDisplayAdapter(this, R.layout.home_page_list_view_layout, ImgList);
         lvHome.setAdapter(adapter);
 }
 
-    class myAdapter extends ArrayAdapter<String>{
-        Context context;
-        int myImages[];
 
-
-        public myAdapter(@NonNull Context c, int myImages[]) {
-            super(c, R.layout.home_page_list_view_layout, R.id.img);
-            this.context = c;
-            this.myImages = myImages;
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @NonNull View convertView, @NonNull ViewGroup parent){
-            //LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(context.LAYOUT_INFLATER_SERVICE);
-
-            //View row = layoutInflater.inflate(R.layout.home_page_list_view_layout, parent, false);
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_page_list_view_layout, null, true);
-            ImageView img = findViewById(R.id.img);
-
-            img.setImageResource(rImag[position]);
-
-            return view;
-        }
-    }
 }
