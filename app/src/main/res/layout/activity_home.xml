@@ -7,7 +7,7 @@
     tools:context=".HomeActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/butAr"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="50dp"
