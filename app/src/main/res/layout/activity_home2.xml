@@ -20,8 +20,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+
     <Button
-        android:id="@+id/signOut"
+        android:id="@+id/logoutbut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -29,6 +30,7 @@
         android:text="Sign out"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <ListView
         android:id="@+id/lvHome"
