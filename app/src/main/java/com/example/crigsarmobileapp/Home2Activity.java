@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -24,7 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Home2Activity extends AppCompatActivity {
+public class Home2Activity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
 
     ListView lvHome;
@@ -34,19 +36,6 @@ public class Home2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home2);
 
-
-        Button logout = findViewById(R.id.logoutbut);
-
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FacebookSdk.sdkInitialize(getApplicationContext());
-                LoginManager.getInstance().logOut();
-                Intent intent = new Intent(Home2Activity.this, LoginActivity.class);
-                intent.putExtra("facebookLogCheck", "logged");
-                startActivity(intent);
-            }
-        });
 
         //=====================================================================================================================
          GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
@@ -105,6 +94,26 @@ public class Home2Activity extends AppCompatActivity {
     }
 
 
+    public void popupMenu(View v){
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.f_signout_pop);
+        popup.show();
+    }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.sign_out_f:
+                FacebookSdk.sdkInitialize(getApplicationContext());
+                LoginManager.getInstance().logOut();
+                Intent intent = new Intent(Home2Activity.this, LoginActivity.class);
+                intent.putExtra("facebookLogCheck", "logged");
+                startActivity(intent);
+                return true;
 
+            default:
+                return false;
+        }
+    }
 }

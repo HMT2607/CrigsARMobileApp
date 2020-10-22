@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,11 +54,11 @@ public class LoginActivity extends AppCompatActivity {
     boolean FacebookCheck = false;
 
 
-    private TextView NameView;
+
 
     private int RC_SIGN_IN = 0;
 
-    Animation popUpAnim;
+    Animation popUpAnim, logAnime, logTitle;
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -67,22 +68,20 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-        NameView = findViewById(R.id.userNameView);
-
         popUpAnim = AnimationUtils.loadAnimation(this,R.anim.anim_popup_cons);
+        logAnime = AnimationUtils.loadAnimation(this,R.anim.anim_logo);
+        logTitle = AnimationUtils.loadAnimation(this,R.anim.anim_login_title);
+
+        ImageView logoView = findViewById(R.id.logoImage);
+        logoView.setAnimation(logAnime);
+
+        TextView logTitleText = findViewById(R.id.textView2);
+        logTitleText.setAnimation(logTitle);
 
         loginbutton = findViewById(R.id.login_button1);
         ConstraintLayout constraintLayout = findViewById(R.id.loginCons);
         constraintLayout.setAnimation(popUpAnim);
 
-        Button butLogin = findViewById(R.id.butLogin);
-        butLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, Home2Activity.class);
-                startActivity(intent);
-            }
-        });
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -165,9 +164,6 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, show authenticated UI.
-
-
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
 
@@ -183,15 +179,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
 
         facebookLog = getIntent().getStringExtra("facebookLogCheck");
-//
-//        if(facebookLog !=null){
-//            signInButton = findViewById(R.id.sign_in_button);
-//            signInButton.setVisibility(View.VISIBLE);
-//        }
-//        else{
-//            signInButton = findViewById(R.id.sign_in_button);
-//            signInButton.setVisibility(View.INVISIBLE);
-//        }
+
 
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -253,27 +241,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
-
-//================================================================================================
-    //FACEBOOK
-//================================================================================================
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        callbackManager.onActivityResult(requestCode, resultCode, data);
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        Intent intent = new Intent(LoginActivity.this, Home2Activity.class);
-//        startActivity(intent);
-//    }
-//================================================================================================
-
     AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
             if (currentAccessToken == null){
                 LoginManager.getInstance().logOut();
-                NameView.setText("");
             }
         }
     };
