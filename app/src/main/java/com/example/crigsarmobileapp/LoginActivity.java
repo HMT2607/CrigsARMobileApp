@@ -219,4 +219,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onDestroy();
         accessTokenTracker.stopTracking();
     }
+
+    @Override
+    public void onBackPressed() {
+        this.moveTaskToBack(true);
+    }
 }
