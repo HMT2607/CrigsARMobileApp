@@ -2,8 +2,11 @@ package com.example.crigsarmobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,6 +16,13 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 
 import com.facebook.FacebookSdk;
@@ -25,11 +35,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Home2Activity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
 
     ListView lvHome;
+
+    String name, first_name, last_name, gender, birthday, profil_id;
+
+
+    private static String url_add ="http://192.168.100.44:8080/crigs/facebookadd.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,31 +55,79 @@ public class Home2Activity extends AppCompatActivity implements PopupMenu.OnMenu
 
 
         //=====================================================================================================================
-         GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+        GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
 
-             @Override
-             public void onCompleted(JSONObject object, GraphResponse response) {
-                 //Toast.makeText(getApplicationContext(), "entered", Toast.LENGTH_SHORT).show();
-                 Log.d("print", "test");
-                 Log.d("print", object.toString());
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+                //Toast.makeText(getApplicationContext(), "entered", Toast.LENGTH_SHORT).show();
+                Log.d("print", "test");
+                Log.d("print", object.toString());
+                Log.d("checking2", "2");
+                try {
+                    name = object.getString("name");
+                    first_name = object.getString("first_name");
+                    last_name = object.getString("last_name");
+                    gender = object.getString("gender");
+                    birthday = object.getString("birthday");
+                    profil_id = object.getString("id");
+                    Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show();
+                    Log.d("name test", name);
+                    Log.d("checking3", "3");
 
-                 try {
-                     String first_name = object.getString("first_name");
-                     Toast.makeText(getApplicationContext(), first_name, Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), "IN CATCH", Toast.LENGTH_SHORT).show();
+                }
 
-                 } catch (JSONException e) {
-                     e.printStackTrace();
-                 }
 
-             }
-         });
 
-         Bundle bundle = new Bundle();
+                try{
+                    StringRequest request = new StringRequest(Request.Method.POST, url_add, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Toast.makeText(getApplicationContext(), "successful", Toast.LENGTH_SHORT).show();
+                        }}, new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error){
+                            Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+                            Log.d("checking4", "4");
+                        }
 
-         bundle.putString("fields", "gender, name, id, first_name, last_name");
+                    }){
+                        @Override
+                        protected Map<String, String> getParams(){
+                            Map<String, String> params = new HashMap<>();
+                            params.put("name", name);
+                            params.put("first_name", first_name);
+                            params.put("last_name", last_name);
+                            params.put("gender", gender);
+                            params.put("birthday", birthday);
+                            params.put("profil_id", profil_id);
 
-         graphRequest.setParameters(bundle);
-         graphRequest.executeAsync();
+                            return params;
+                        }
+                    };
+
+                    RequestQueue requestQueue = Volley.newRequestQueue(Home2Activity.this);
+                    requestQueue.add(request);
+
+
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "did not enter", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        Bundle bundle = new Bundle();
+
+        bundle.putString("fields", "gender, name, id, first_name, last_name, birthday");
+
+        graphRequest.setParameters(bundle);
+        graphRequest.executeAsync();
+        Log.d("checking", "1");
+        //=====================================================================================================================
+
+
 
 
         //=====================================================================================================================

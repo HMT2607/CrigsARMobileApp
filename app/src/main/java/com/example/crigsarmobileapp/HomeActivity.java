@@ -22,6 +22,12 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -40,13 +46,19 @@ import org.json.JSONObject;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     ListView lvHome;
 
     GoogleSignInClient mGoogleSignInClient;
+
+    String personName, personGivenName, personFamilyName, personEmail, personId;
+
+    private static String url_add ="http://192.168.100.44:8080/crigs/googleadd.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,18 +73,54 @@ public class HomeActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
         if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
+            personName = acct.getDisplayName();
+            personGivenName = acct.getGivenName();
+            personFamilyName = acct.getFamilyName();
+            personEmail = acct.getEmail();
+            personId = acct.getId();
+            //Uri personPhoto = acct.getPhotoUrl();
 
             Log.d("GOOGLE", personName);
             Log.d("GOOGLE", personGivenName);
             Log.d("GOOGLE", personFamilyName);
             Log.d("GOOGLE", personEmail);
             Log.d("GOOGLE", personId);
+        }
+
+
+
+
+        try{
+            StringRequest request = new StringRequest(Request.Method.POST, url_add, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Toast.makeText(getApplicationContext(), "successful", Toast.LENGTH_SHORT).show();
+                }}, new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error){
+                    Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+                }
+
+            }){
+                @Override
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<>();
+                    params.put("personName", personName);
+                    params.put("personGivenName", personGivenName);
+                    params.put("personFamilyName", personFamilyName);
+                    params.put("personEmail", personEmail);
+                    params.put("personId", personId);
+
+                    return params;
+                }
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(HomeActivity.this);
+            requestQueue.add(request);
+
+
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "did not enter", Toast.LENGTH_SHORT).show();
         }
 
 

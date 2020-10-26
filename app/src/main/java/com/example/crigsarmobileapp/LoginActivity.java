@@ -85,12 +85,13 @@ public class LoginActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
-        loginbutton.setPermissions(Arrays.asList("user_gender", "user_friends"));
+        loginbutton.setPermissions(Arrays.asList("user_gender", "user_friends", "user_birthday"));
 
         loginbutton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(getApplicationContext(),"Login Successful", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Login Successful", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -200,44 +201,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-//================================================================================================
-    //FACEBOOK
-//================================================================================================
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        callbackManager.onActivityResult(requestCode, resultCode, data);
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-//
-//            @Override
-//            public void onCompleted(JSONObject object, GraphResponse response) {
-//                //Toast.makeText(getApplicationContext(), "entered", Toast.LENGTH_SHORT).show();
-//                Log.d("print", "test");
-//                Log.d("print", object.toString());
-//
-//                try {
-//                    String first_name = object.getString("first_name");
-//                    Toast.makeText(getApplicationContext(), first_name, Toast.LENGTH_SHORT).show();
-//                    NameView.setText("Welcome " + first_name);
-//                    String id = object.getString("id");
-//
-//                    Picasso.get().load("https:/graph.facebook.com/" + id + "/picture?type=large").into(UserImgView);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        });
-//
-//        Bundle bundle = new Bundle();
-//
-//        bundle.putString("fields", "gender, name, id, first_name, last_name");
-//
-//        graphRequest.setParameters(bundle);
-//        graphRequest.executeAsync();
-//    }
-//================================================================================================
+
 
 
 
